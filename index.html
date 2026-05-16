@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Monitor Nodes DF-SUL</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,'Segoe UI',sans-serif;background:#f0f2f5;color:#232f3e;font-size:13px;line-height:1.5}
+input[name="tab"]{display:none}
+.hdr{background:#232f3e;padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr h1{color:#ff9900;font-size:18px;font-weight:700}.hdr span{color:#aab7c4;font-size:11px}
+.tabs{background:#37475a;display:flex;gap:2px;padding:0 16px;flex-wrap:wrap}
+.tabs label{padding:11px 20px;color:#aab7c4;font-size:11px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.tabs label:hover{color:#fff;background:rgba(255,255,255,.04)}
+#t0:checked~.tabs label[for="t0"],
+#t1:checked~.tabs label[for="t1"]{color:#ff9900;border-bottom-color:#ff9900;background:rgba(255,153,0,.07)}
+.cnt{max-width:1400px;margin:16px auto;padding:0 16px}
+.pn{display:none}
+#t0:checked~.cnt .pn:nth-child(1){display:block}
+#t1:checked~.cnt .pn:nth-child(2){display:block}
+.st{font-size:15px;font-weight:700;color:#232f3e;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #ff9900}
+.bx{background:#fff;border-radius:10px;padding:18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.bx h3{font-size:12px;font-weight:700;color:#232f3e;margin-bottom:10px}
+.ins{background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:11px;color:#92400e}
+.ins h4{margin-bottom:4px;color:#232f3e}
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:18px}
+.kc{background:#fff;border-radius:10px;padding:14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:3px solid #e2e8f0}
+.kc.ok{border-top-color:#15803d}.kc.at{border-top-color:#ca8a04}.kc.cr{border-top-color:#dc2626}
+.kl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kv{font-size:22px;font-weight:800;color:#1e293b}
+.kv.c-ok{color:#15803d}.kv.c-at{color:#ca8a04}.kv.c-cr{color:#dc2626}
+.bg{display:inline-block;padding:2px 10px;border-radius:12px;font-size:9px;font-weight:700;margin-top:4px}
+.bg-ok{background:#dcfce7;color:#15803d}.bg-at{background:#fef9c3;color:#ca8a04}.bg-cr{background:#fee2e2;color:#dc2626}.bg-na{background:#f1f5f9;color:#64748b}
+.bg-d1{background:#ede9fe;color:#6d28d9}
+.c-ok{color:#15803d;font-weight:700}.c-at{color:#ca8a04;font-weight:700}.c-cr{color:#dc2626;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:#232f3e;color:#fff;padding:7px 10px;text-align:center;font-weight:600;font-size:10px}
+td{padding:6px 10px;text-align:center;border-bottom:1px solid #f1f5f9}
+tr:nth-child(even){background:#f8fafc}
+tr:hover{background:#eff6ff}
+.rg td{background:#f0f7ff;font-weight:600}
+.grp-hdr{background:#232f3e;color:#fff;padding:12px 16px;border-radius:8px;margin:16px 0 8px;font-size:12px;font-weight:600}
+.grp-body{padding:0 8px 16px}
+details{margin:8px 0;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden}
+details summary{padding:10px 14px;cursor:pointer;background:#f8fafc;font-weight:600;font-size:11px}
+details summary:hover{background:#eff6ff}
+details[open] summary{background:#e0f2fe}
+.db{padding:12px}
+.sparkline{display:block;margin:8px auto 0}
+select{padding:6px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:11px;background:#fff;cursor:pointer}
+select:focus{outline:2px solid #ff9900;border-color:#ff9900}
+</style>
+</head>
+<body>
+<input type="radio" name="tab" id="t0" checked>
+<input type="radio" name="tab" id="t1">
+<div class="hdr">
+<h1>&#128202; Monitor Nodes DF-SUL</h1>
+<span>Dados: FM Metrics | Atualizado: 15/05/2026 | W15-W20 2026</span>
+</div>
+<div class="tabs">
+<label for="t0">Todos Nodes</label>
+<label for="t1">&#128200; Evolucao PNs</label>
+</div>
+<div class="cnt">
+<div class="pn" id="p4"></div>
+<div class="pn" id="p1">
+<div class="st">Evolucao KPIs - PNs DF-SUL (W01-W20 / 2026)</div>
+<div class="ins">
+<h4>Evolucao Semanal dos Partner Nodes</h4>
+<p><strong>Nodes:</strong> EMR8, ELO8, EJO8 (Dialogo) | EME8 (Fatelog) | EIJ8, EUM8, EVE8 (Rede Frete)</p>
+<p><strong>D+1 Departure:</strong> EME8, EUM8 | <strong>Obs:</strong> Departure EUM8 fora do ranking</p>
+<p><strong>Metas:</strong> Receive &ge;98,5% | Stow &ge;99,5% | Departure &ge;99,5% | PPP &ge;175 | CPT 100% | OTD 100%</p>
+<p><strong>Regional assumiu operacao em 09/02/2026 (W07)</strong></p>
+</div>
+<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:18px">
+<div><label style="font-weight:600;color:#444;font-size:11px">KPI:</label>
+<select id="evoKpi"><option value="receive">Receive Success %</option><option value="stow">Stow Success %</option><option value="departure">Departure Success %</option><option value="ppp">PPP (Packages per Pallet)</option><option value="cpt">CPT Success %</option><option value="otd">OTD %</option></select></div>
+<div><label style="font-weight:600;color:#444;font-size:11px">Visualizar:</label>
+<select id="evoView"><option value="ALL">Todos os PNs</option><option value="GRP_DIA">Grupo: Dialogo (EMR8, ELO8, EJO8)</option><option value="GRP_FAT">Grupo: Fatelog (EME8)</option><option value="GRP_RF">Grupo: Rede Frete (EIJ8, EUM8, EVE8)</option><option value="EMR8">EMR8</option><option value="ELO8">ELO8</option><option value="EJO8">EJO8</option><option value="EME8">EME8</option><option value="EIJ8">EIJ8</option><option value="EUM8">EUM8</option><option value="EVE8">EVE8</option></select></div></div>
+<div class="bx"><h3 id="evoTitle">Receive Success % - Todos os PNs</h3>
+<p style="font-size:10px;color:#888;margin-bottom:10px" id="evoMeta">Meta: >=98,5% | Semanas W01-W20 2026</p>
+<canvas id="evoChart" style="width:100%;display:block"></canvas></div>
+<div class="bx"><h3>Tabela de Dados</h3><div id="evoTable" style="overflow-x:auto"></div></div>
+</div>
+</div>
+<div class="ins" style="margin-top:30px;text-align:center;border-left-color:#232f3e">
+<span>FM METRICS - Monitor Nodes DF-SUL | Atualizado: 15/05/2026 23:31</span>
+</div>
+<script>
+window.DATA_CONFIG={
+"meta":{"semanas":["W15","W16","W17","W18","W19","W20"],"atualizado":"15/05/2026 23:31","regional":"DF-SUL"},
+"node_order":["ECB8","EGO8","ESE8","ESB8","ERS8","ELO8","EMR8","EJO8","EME8","EIJ8","EUM8","EVE8","EOZ8"],
+"grupos":{
+"ECB8":{"nodes":["ECB8","EVE8"],"spc":"CGH7","color":"#0ea5e9"},
+"ERS8":{"nodes":["ERS8"],"spc":"CGH7","color":"#059669"},
+"ESB8":{"nodes":["ESB8"],"spc":"CGH7","color":"#0891b2"},
+"ESE8":{"nodes":["ESE8","EIJ8","EME8","EJO8","EUM8"],"spc":"CGH7","color":"#7c3aed"},
+"ELO8":{"nodes":["ELO8","EMR8"],"spc":"CGH7","color":"#92400e"},
+"EGO8":{"nodes":["EGO8"],"spc":"CGH7","color":"#ea580c"}
+},
+"nodes":{
+"ECB8":{"t":"SPC/AMZL","d1":false,"v":[27498,28498,29156,30217,29182,30926],"p":[269,257,266.4,280.7,272.2,283.5],"r":[99.62,99.43,99.73,99.56,99.15,99.30],"s":[99.94,99.97,99.95,99.91,99.94,98.83],"d":[99.98,100,100,100,100,99.20],"b":[42,35,28,39,41,37],"ba":[1105,1140,1168,1207,1183,1220]},
+"EGO8":{"t":"SPC/AMZL","d1":false,"v":[3852,4012,3925,4105,3980,4238],"p":[218.5,225.3,231.7,240.2,238.1,246.8],"r":[99.87,99.59,97.02,99.79,99.73,99.92],"s":[99.79,99.66,99.7,99.71,99.26,75.88],"d":[100,100,99.98,100,100,99.90],"b":[52,45,38,42,50,48],"ba":[178,183,191,198,201,203]},
+"ESE8":{"t":"SPC/AMZL","d1":false,"v":[21450,22105,22834,23542,23015,24138],"p":[185.2,190.5,193.8,196.2,197.5,199.0],"r":[99.94,99.96,99.78,99.63,100,99.97],"s":[99.57,99.53,99.87,99.95,99.62,99.98],"d":[99.98,99.98,100,100,100,100],"b":[42,38,35,32,40,38],"ba":[195,198,205,210,215,220]},
+"ESB8":{"t":"SPC/AMZL","d1":false,"v":[8125,8340,8512,8705,8632,8970],"p":[205.3,210.8,215.2,218.5,220.1,222.0],"r":[99.50,99.42,99.55,99.60,99.48,99.50],"s":[99.03,99.15,99.22,99.35,99.12,99.03],"d":[99.69,99.75,99.82,99.88,99.72,99.69],"b":[95,92,88,85,91,89],"ba":[425,438,450,462,470,476]},
+"ERS8":{"t":"SPC/AMZL","d1":false,"v":[7580,7820,7950,8105,8020,8316],"p":[188.5,192.3,195.8,198.5,200.2,203.2],"r":[98.80,98.95,99.10,99.25,99.05,98.80],"s":[99.85,99.90,99.92,99.95,99.88,99.95],"d":[100,100,100,100,100,100],"b":[95,92,88,85,91,89],"ba":[285,292,300,308,312,317]},
+"ELO8":{"t":"SPC/Dialogo","d1":false,"v":[11820,12105,12450,12815,13025,13411],"p":[81,71.5,70.8,69.1,81.3,80.9],"r":[99.87,99.59,97.02,99.79,99.73,99.41],"s":[99.79,99.66,99.7,99.71,99.26,99.68],"d":[100,100,99.98,100,100,99.99],"b":[28,25,22,20,24,23],"ba":[298,305,312,320,325,332]},
+"EMR8":{"t":"PN/Dialogo","d1":false,"v":[6250,6420,6580,6715,6850,6941],"p":[145.6,146.8,141.3,138.7,0,162.2],"r":[99.62,99.43,99.73,99.56,99.15,99.30],"s":[99.94,99.97,99.95,99.91,99.94,99.94],"d":[99.98,100,100,100,100,100],"b":[15,14,12,11,13,12],"ba":[348,355,362,370,375,382]},
+"EJO8":{"t":"PN/Dialogo","d1":false,"v":[3850,4020,4180,4320,4450,4547],"p":[106.6,0,114.4,108.8,115,115.3],"r":[99.77,99.93,99.98,99.95,100,99.78],"s":[99.98,100,99.96,100,99.96,100],"d":[100,100,100,100,99.98,99.95],"b":[820,818,815,812,817,815],"ba":[95,100,105,110,113,116]},
+"EME8":{"t":"PN/Fatelog","d1":true,"v":[6850,7105,7325,7520,7680,7825],"p":[0,0,188,0,0,213.7],"r":[99.91,99.83,99.76,99.33,99.77,99.70],"s":[99.61,99.19,99.08,99.54,99.56,99.62],"d":[86.72,86.74,53.72,82.08,88.12,79.53],"b":[1180,1175,1172,1170,1173,1171],"ba":[185,192,198,205,210,214]},
+"EIJ8":{"t":"PN/Rede Frete","d1":false,"v":[4850,5020,5180,5285,5380,5453],"p":[147.6,152.5,163.2,0,179.6,186.1],"r":[99.94,99.96,99.78,99.63,100,99.98],"s":[99.57,99.53,99.87,99.95,99.62,99.98],"d":[99.98,99.98,100,100,100,100],"b":[25,22,20,18,21,20],"ba":[92,97,102,107,110,114]},
+"EUM8":{"t":"PN/Rede Frete","d1":true,"v":[2180,2250,2320,2380,2450,2503],"p":[204.2,386.2,499.5,372.2,354.3,203.7],"r":[99.86,99.89,100,100,99.9,100],"s":[98.02,99.54,99.88,100,99.95,100],"d":[87.35,85.48,54.52,85.36,88.22,100],"b":[270,268,265,262,266,264],"ba":[118,122,128,132,136,139]},
+"EVE8":{"t":"PN/Rede Frete","d1":false,"v":[1720,1785,1850,1905,1960,1996],"p":[0,149.1,163.8,178.6,186.6,186.6],"r":[98.58,99.75,99.87,100,99.8,98.45],"s":[99.88,99.93,100,100,100,99.93],"d":[100,99.94,100,100,100,100],"b":[218,215,212,210,212,211],"ba":[152,158,162,168,172,174]},
+"EOZ8":{"t":"PN","d1":false,"v":[0,0,0,0,0,0],"p":[0,0,0,0,0,0],"r":[0,0,0,0,0,0],"s":[0,0,0,0,0,0],"d":[0,0,0,0,0,0],"b":[0,0,0,0,0,0],"ba":[0,0,0,0,0,0]}
+}};
+</script>
+<script>
+(function(){
+var D=window.DATA_CONFIG,M=D.meta,WK=M.semanas,NW=WK.length,LW=NW-1,META=175;
+function fmt(n){return n.toLocaleString("pt-BR")}
+function pC(p){return p>=META?"c-ok":p>=165?"c-at":"c-cr"}
+function pB(p){if(p===0)return'<span class="bg bg-na">OFENSOR</span>';return p>=META?'<span class="bg bg-ok">OK</span>':p>=165?'<span class="bg bg-at">ATENCAO</span>':'<span class="bg bg-cr">CRITICO</span>'}
+function lV(a){for(var i=a.length-1;i>=0;i--)if(a[i]>0)return Math.round(a[i]);return 0}
+function fV(a){for(var i=0;i<a.length;i++)if(a[i]>0)return Math.round(a[i]);return 0}
+function spark(arr,color,nd){var w2=420,h2=130,padL=42,padR=20,padT=28,padB=28;var vals=arr.map(function(v){return Math.round(v)});var pos=vals.filter(function(v){return v>0});var mn=pos.length>0?Math.min.apply(null,pos):0;var mx=Math.max.apply(null,vals);if(mn>META-30)mn=META-30;if(mx<META+30)mx=META+30;if(mx<=mn)mx=mn+50;var chartW=w2-padL-padR,chartH=h2-padT-padB;var sx=chartW/(NW-1);function yP(v){return v>0?padT+(mx-v)*(chartH/(mx-mn)):padT+chartH}var s='<svg class="sparkline" width="'+w2+'" height="'+h2+'" viewBox="0 0 '+w2+' '+h2+'">';s+='<rect x="0" y="0" width="'+w2+'" height="'+h2+'" fill="#fafafa" rx="6" stroke="#e8e8e8" stroke-width="1"/>';for(var k=0;k<NW;k++){var xk=padL+k*sx;s+='<line x1="'+xk+'" y1="'+padT+'" x2="'+xk+'" y2="'+(h2-padB)+'" stroke="#eee" stroke-width="1"/>'}var metaY=yP(META);s+='<line x1="'+padL+'" y1="'+metaY+'" x2="'+(w2-padR)+'" y2="'+metaY+'" stroke="#ff9900" stroke-width="2" stroke-dasharray="6,3"/>';s+='<text x="'+(padL-4)+'" y="'+(metaY+4)+'" fill="#ff9900" text-anchor="end" font-size="9" font-weight="700">'+META+'</text>';for(var k=0;k<NW;k++){var xk=padL+k*sx;s+='<text x="'+xk+'" y="'+(h2-padB+15)+'" fill="#666" text-anchor="middle" font-size="9" font-weight="600">'+WK[k]+'</text>'}var pts=[];for(var k=0;k<NW;k++){pts.push((padL+k*sx)+","+yP(vals[k]))}s+='<polyline points="'+pts.join(" ")+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round"/>';for(var k=0;k<NW;k++){var xk=padL+k*sx;var yk=yP(vals[k]);var dc=vals[k]>=META?"#15803d":vals[k]>0?"#dc2626":"#999";s+='<circle cx="'+xk+'" cy="'+yk+'" r="5" fill="'+dc+'" stroke="#fff" stroke-width="2"/>';s+='<text x="'+xk+'" y="'+(yk-10)+'" fill="'+dc+'" text-anchor="middle" font-size="10" font-weight="700">'+(vals[k]>0?vals[k]:"0")+'</text>'}s+='<text x="'+(padL+2)+'" y="16" fill="#37475a" font-size="10" font-weight="700">'+nd+'</text>';s+='<text x="'+(w2-padR)+'" y="16" fill="#666" text-anchor="end" font-size="9">Meta: '+META+'</text>';s+='</svg>';return s}
+var w;
+var p4='<div class="st">Todos os Nodes - Agrupados por SPC</div>';
+p4+='<div class="ins"><h4>Legenda</h4><p><span class="bg bg-d1">D+1</span> = Stow/Departure avaliados com tolerancia D+1 (proximo dia util)</p></div>';
+var gO=["ECB8","ERS8","ESB8","ESE8","ELO8","EGO8"];
+gO.forEach(function(grp){
+var gc=D.grupos[grp],gn=gc.nodes,gV=0,gP=0;
+gn.forEach(function(nd){var n=D.nodes[nd];gV+=n.v[LW];if(n.p[LW]>0)gP+=n.p[LW]*n.v[LW]});
+var gPPP=gV>0&&gP>0?Math.round(gP/gV):0;
+var gVols=[];for(var gw=0;gw<NW;gw++){var gwV=0;gn.forEach(function(nd){gwV+=D.nodes[nd].v[gw]});gVols.push(gwV)}
+p4+='<div class="grp-hdr" style="border-left:4px solid '+gc.color+'">Grupo '+grp+' ('+gn.join("+")+') PPP: '+gPPP+' '+pB(gPPP)+' Vol '+WK[LW]+': '+fmt(gV)+' | Vol Total '+WK[0]+'-'+WK[LW]+': '+fmt(gVols.reduce(function(a,b){return a+b},0))+'</div><div class="grp-body">';
+p4+='<table style="margin-bottom:12px"><thead><tr><th>Vol. Processado pelo SPC</th>';for(w=0;w<NW;w++)p4+='<th>'+WK[w]+'</th>';p4+='<th>Total</th></tr></thead><tbody><tr class="rg"><td><strong>'+grp+'</strong></td>';for(w=0;w<NW;w++)p4+='<td>'+fmt(gVols[w])+'</td>';p4+='<td><strong>'+fmt(gVols.reduce(function(a,b){return a+b},0))+'</strong></td></tr></tbody></table>';
+gn.forEach(function(nd){var n=D.nodes[nd],lp=lV(n.p),fp=fV(n.p),dl=lp-fp;
+var d1Tag=n.d1?' <span class="bg bg-d1">D+1</span>':"";
+var oTag=lp===0?' <span class="bg bg-na">OFENSOR</span>':"";
+p4+='<details><summary>'+nd+' ('+n.t+') PPP '+WK[LW]+': '+Math.round(n.p[LW])+' '+pB(lp)+d1Tag+oTag+'</summary><div class="db"><table><thead><tr><th>KPI</th><th>Meta</th>';
+for(w=0;w<NW;w++)p4+='<th>'+WK[w]+'</th>';p4+='</tr></thead><tbody>';
+p4+='<tr><td><strong>PPP</strong></td><td>'+META+'</td>';for(w=0;w<NW;w++){var pv=Math.round(n.p[w]);p4+='<td class="'+pC(pv)+'">'+pv+'</td>'}p4+='</tr>';
+p4+='<tr><td><strong>Volume</strong></td><td>-</td>';for(w=0;w<NW;w++)p4+='<td>'+fmt(n.v[w])+'</td>';p4+='</tr>';
+p4+='<tr><td><strong>Receive%</strong></td><td>98.5%</td>';for(w=0;w<NW;w++){p4+='<td class="'+(n.r[w]>=98.5?"c-ok":"c-cr")+'">'+n.r[w]+'%</td>'}p4+='</tr>';
+p4+='<tr><td><strong>Stow%</strong></td><td>99.5%</td>';for(w=0;w<NW;w++){p4+='<td class="'+(n.s[w]>=99.5?"c-ok":"c-cr")+'">'+n.s[w]+'%</td>'}p4+='</tr>';
+p4+='<tr><td><strong>Departure%</strong></td><td>99.5%</td>';for(w=0;w<NW;w++){p4+='<td class="'+(n.d[w]>=99.5?"c-ok":"c-cr")+'">'+n.d[w]+'%</td>'}p4+='</tr>';
+p4+='<tr><td><strong>Backlog</strong></td><td>0</td>';for(w=0;w<NW;w++)p4+='<td>'+n.b[w]+'</td>';p4+='</tr>';
+p4+='<tr><td><strong>Backlog Acc</strong></td><td>-</td>';for(w=0;w<NW;w++)p4+='<td>'+n.ba[w]+'</td>';p4+='</tr>';
+p4+='</tbody></table>';
+p4+='<p style="font-size:10px;color:#666;margin-top:8px">Evolucao PPP '+nd+':</p>';
+p4+=spark(n.p,gc.color,nd);
+p4+='</div></details>'});
+p4+='</div>'});
+document.getElementById("p4").innerHTML=p4;
+})();
+</script>
+<script>
+(function(){
+var ED={"EMR8":{"receive":[96.86,97.11,97.04,98.35,98.3,99.18,97.73,97.09,97.85,97.68,98.6,99.49,99.04,99.75,99.62,99.43,99.73,99.56,99.15,99.3],"stow":[99.82,98.62,98.66,99.24,99.48,98.75,98.81,99.54,99.64,99.75,98.15,99.74,99.97,99.9,99.94,99.97,99.95,99.91,99.94,99.94],"departure":[100,100,100,100,100,100,92.26,99.93,99.97,99.98,99.98,99.88,100,100,99.98,100,100,100,100,100],"ppp":[null,null,null,null,null,null,null,null,null,130.6,null,null,null,139.6,145.6,146.8,141.3,138.7,null,null],"cpt":[100,100,100,80,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100],"otd":[100,100,100,80,100,100,100,100,80,100,100,100,100,100,100,90,100,100,100,100]},"ELO8":{"receive":[100,95.83,96.32,97.43,98.71,97.47,98.82,98.22,97.54,99.51,99.25,98.04,98.31,99.4,99.87,99.59,97.02,99.79,99.73,99.41],"stow":[99.56,96.65,98.72,98.91,97.29,97.64,98.21,98.52,99.02,94.33,97.7,98.3,99.18,98.12,99.79,99.66,99.7,99.71,99.26,99.68],"departure":[100,99.94,100,100,100,99.99,93.82,79.87,100,100,97.12,100,98.19,95.65,100,100,99.98,100,100,99.99],"ppp":[null,null,50,null,null,null,null,null,null,61.5,68,63.1,72,74.3,81,71.5,70.8,69.1,81.3,null],"cpt":[100,100,80,100,100,100,80,79.65,100,100,100,100,80,100,100,100,100,100,100,100],"otd":[100,86,80,93.33,100,100,60,100,100,100,100,100,80,100,100,93.33,100,100,100,100]},"EJO8":{"receive":[99.57,80.84,95.66,97.13,77.43,82.63,96.24,98.86,88.54,99.07,99.49,95.48,99.13,99.9,99.77,99.93,99.98,99.95,100,99.78],"stow":[52.15,76.67,63.53,68.11,94.54,92.59,96.58,96.82,98.15,98.61,98.06,98.44,99.92,100,99.98,100,99.96,100,99.96,100],"departure":[100,94.35,100,98.3,94.32,100,99.84,100,99.97,99.76,100,99.9,100,100,100,100,100,100,99.98,99.95],"ppp":[null,null,null,null,null,null,null,null,null,111.1,111.4,93.8,null,null,106.6,null,114.4,108.8,115,115.3],"cpt":[100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,99.96,100,100,100],"otd":[100,100,100,100,100,100,100,100,80,100,80,100,100,100,100,100,100,100,100,100]},"EME8":{"receive":[41.25,72.41,75.12,78.26,85.52,87.12,81.65,90.49,92.36,99.46,99.77,99.7,99.37,99.78,99.91,99.83,99.76,99.33,99.77,99.7],"stow":[96.96,98.75,98.56,99.74,99.76,99.43,99.38,96.16,98.6,99.33,99.04,99.54,96.26,99.17,99.61,99.19,99.08,99.54,99.56,99.62],"departure":[100,94.76,99.92,100,100,100,100,100,100,100,100,88.75,51.74,83.7,86.72,86.74,53.72,82.08,88.12,79.53],"ppp":[null,null,null,null,null,null,null,null,null,146.5,null,null,157.2,161.5,null,null,188,null,null,213.7],"cpt":[100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100],"otd":[100,100,100,100,100,100,100,100,100,100,100,100,80,100,100,100,100,100,100,100]},"EIJ8":{"receive":[100,99.85,99.06,99.47,99.88,99.56,96.22,98.61,99.66,99.75,99.94,99.08,99.94,99.95,99.94,99.96,99.78,99.63,100,99.98],"stow":[100,98.05,91.41,98.69,98.91,99.09,98.85,98.45,99.51,99.54,99.17,99.47,99.36,97.84,99.57,99.53,99.87,99.95,99.62,99.98],"departure":[100,100,99.69,100,100,100,99.96,97.04,99.03,100,100,99.82,100,100,99.98,99.98,100,100,100,100],"ppp":[null,null,null,null,null,null,null,null,null,149.6,155,147,135.3,148.3,147.6,152.5,163.2,null,179.6,186.1],"cpt":[100,100,100,100,100,100,100,100,99.52,100,100,100,100,100,100,100,100,100,100,100],"otd":[100,90,73.33,93.33,100,90,100,58.33,100,100,90,83.33,100,100,100,100,100,100,100,100]},"EUM8":{"receive":[92.03,76.45,86.67,82.33,66.75,92.97,96.15,88.64,95.82,99.22,99.9,100,100,99.83,99.86,99.89,100,100,99.9,100],"stow":[98.07,90.32,81.48,86.86,88.42,89.64,96.67,79.31,92.83,99.03,96.12,98.46,99.66,99.26,98.02,99.54,99.88,100,99.95,100],"departure":[100,100,100,100,100,99.94,100,100,100,100,100,100,100,100,87.35,85.48,54.52,85.36,88.22,100],"ppp":[null,null,null,null,null,null,null,null,null,128.5,116,163.3,129.6,null,204.2,386.2,499.5,372.2,354.3,203.7],"cpt":[100,100,100,100,100,100,100,100,100,100,100,60,100,100,100,100,100,100,100,100],"otd":[100,100,100,80,100,100,100,75,100,100,80,50,100,100,100,100,100,100,100,100]},"EVE8":{"receive":[55.55,89.05,96.12,97.93,87.5,99.15,99.13,98.36,99.33,99.71,90.33,99.57,93.88,99.84,98.58,99.75,99.87,100,99.8,98.45],"stow":[100,98.97,99.5,99.89,99.48,99.85,98.9,99.72,100,99.57,99.42,97.74,100,99.85,99.88,99.93,100,100,100,99.93],"departure":[100,99.96,100,100,100,100,100,99.35,100,100,100,100,99.94,100,100,99.94,100,100,100,100],"ppp":[null,null,null,null,null,null,null,null,null,null,208.2,185.2,163.2,null,null,149.1,163.8,178.6,186.6,null],"cpt":[100,100,100,100,100,100,100,75,100,100,100,100,100,100,100,100,100,100,100,100],"otd":[100,100,100,80,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100]}};
+var ENODES=["EMR8","ELO8","EJO8","EME8","EIJ8","EUM8","EVE8"];
+var EWKS=["W01","W02","W03","W04","W05","W06","W07","W08","W09","W10","W11","W12","W13","W14","W15","W16","W17","W18","W19","W20"];
+var ECOL={"EMR8":"#0a3d6b","ELO8":"#9b59b6","EJO8":"#7f8c8d","EME8":"#e67e22","EIJ8":"#27ae60","EUM8":"#c0392b","EVE8":"#2980b9"};
+var ETGT={"receive":98.5,"stow":99.5,"departure":99.5,"ppp":175,"cpt":100,"otd":100};
+var EKNAME={"receive":"Receive Success %","stow":"Stow Success %","departure":"Departure Success %","ppp":"Packages per Pallet","cpt":"CPT Success %","otd":"OTD %"};
+var EKMETA={"receive":"Meta: >=98,5%","stow":"Meta: >=99,5%","departure":"Meta: >=99,5%","ppp":"Meta: >=175","cpt":"Meta: =100%","otd":"Meta: =100%"};
+var EGRP={"GRP_DIA":["EMR8","ELO8","EJO8"],"GRP_FAT":["EME8"],"GRP_RF":["EIJ8","EUM8","EVE8"]};
+var EGNAME={"GRP_DIA":"Grupo Dialogo","GRP_FAT":"Grupo Fatelog","GRP_RF":"Grupo Rede Frete"};
+var EMK=6;
+function evoDraw(){var kpi=document.getElementById('evoKpi').value;var vw=document.getElementById('evoView').value;var cv=document.getElementById('evoChart');var ctx=cv.getContext('2d');var dpr=window.devicePixelRatio||1;var cw=cv.parentElement.offsetWidth-36;var ch=500;cv.width=cw*dpr;cv.height=ch*dpr;cv.style.width=cw+'px';cv.style.height=ch+'px';ctx.scale(dpr,dpr);var nodes=vw==='ALL'?ENODES:(EGRP[vw]||[vw]);var vName=vw==='ALL'?'Todos os PNs':(EGNAME[vw]||vw);document.getElementById('evoTitle').textContent=EKNAME[kpi]+' - '+vName;document.getElementById('evoMeta').textContent=EKMETA[kpi]+' | Semanas W01-W20 2026';var vals=[];nodes.forEach(function(n){ED[n][kpi].forEach(function(v){if(v!==null)vals.push(v)});});ctx.clearRect(0,0,cw,ch);ctx.fillStyle='#ffffff';ctx.fillRect(0,0,cw,ch);if(!vals.length){ctx.fillStyle='#aaa';ctx.font='13px Arial';ctx.textAlign='center';ctx.fillText('Sem dados',cw/2,ch/2);return;}var yMn=Math.min.apply(null,vals),yMx=Math.max.apply(null,vals);var tgt=ETGT[kpi];if(tgt!==null){if(tgt<yMn)yMn=tgt;if(tgt>yMx)yMx=tgt;}var yr=yMx-yMn;if(yr===0)yr=10;yMn-=yr*0.08;yMx+=yr*0.08;if(['receive','stow','departure','cpt','otd'].indexOf(kpi)>=0){yMx=Math.min(101,yMx);yMn=Math.max(0,yMn);}var P={t:15,r:15,b:55,l:48};var pW=cw-P.l-P.r,pH=ch-P.t-P.b;var RH=13,RW=34,RAD=3;ctx.strokeStyle='#ececec';ctx.lineWidth=0.6;for(var i=0;i<=5;i++){var y=P.t+pH-(i/5)*pH;ctx.beginPath();ctx.moveTo(P.l,y);ctx.lineTo(P.l+pW,y);ctx.stroke();var v=yMn+(i/5)*(yMx-yMn);ctx.fillStyle='#aaa';ctx.font='10px Arial';ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(v.toFixed(kpi==='ppp'?0:1),P.l-5,y);}ctx.fillStyle='#aaa';ctx.font='10px Arial';ctx.textAlign='center';ctx.textBaseline='top';for(var i=0;i<20;i++){ctx.fillText(EWKS[i],P.l+(i/19)*pW,P.t+pH+8);}var mx=P.l+(EMK/19)*pW;ctx.strokeStyle='#ff9900';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(mx,P.t);ctx.lineTo(mx,P.t+pH);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#e68a00';ctx.font='bold 8px Arial';ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('Regional assumiu',mx+3,P.t+2);ctx.fillText('operacao (09/02)',mx+3,P.t+11);if(tgt!==null){var tn=(tgt-yMn)/(yMx-yMn);if(tn>0&&tn<1){var ty=P.t+pH-tn*pH;ctx.strokeStyle='#cc0000';ctx.lineWidth=1.8;ctx.setLineDash([8,4]);ctx.beginPath();ctx.moveTo(P.l,ty);ctx.lineTo(P.l+pW,ty);ctx.stroke();ctx.setLineDash([]);}}nodes.forEach(function(n){var d=ED[n][kpi];ctx.strokeStyle=ECOL[n];ctx.lineWidth=2;ctx.beginPath();var st=false;for(var i=0;i<20;i++){if(d[i]===null){st=false;continue;}var x=P.l+(i/19)*pW,y=P.t+pH-((d[i]-yMn)/(yMx-yMn))*pH;if(!st){ctx.moveTo(x,y);st=true;}else ctx.lineTo(x,y);}ctx.stroke();});for(var i=0;i<20;i++){var pts=[];nodes.forEach(function(n){var v=ED[n][kpi][i];if(v===null)return;var y=P.t+pH-((v-yMn)/(yMx-yMn))*pH;pts.push({n:n,v:v,y:y,col:ECOL[n]});});if(!pts.length)continue;pts.sort(function(a,b){return a.y-b.y;});var minGap=RH+1;for(var pass=0;pass<10;pass++){var moved=false;for(var j=1;j<pts.length;j++){var gap=pts[j].y-pts[j-1].y;if(gap<minGap){var push=(minGap-gap)/2+0.5;pts[j-1].y-=push;pts[j].y+=push;moved=true;}}if(!moved)break;}var x=P.l+(i/19)*pW;ctx.textAlign='center';ctx.textBaseline='middle';pts.forEach(function(p){var rx=x-RW/2,ry=p.y-RH/2;ctx.beginPath();ctx.moveTo(rx+RAD,ry);ctx.lineTo(rx+RW-RAD,ry);ctx.quadraticCurveTo(rx+RW,ry,rx+RW,ry+RAD);ctx.lineTo(rx+RW,ry+RH-RAD);ctx.quadraticCurveTo(rx+RW,ry+RH,rx+RW-RAD,ry+RH);ctx.lineTo(rx+RAD,ry+RH);ctx.quadraticCurveTo(rx,ry+RH,rx,ry+RH-RAD);ctx.lineTo(rx,ry+RAD);ctx.quadraticCurveTo(rx,ry,rx+RAD,ry);ctx.closePath();ctx.fillStyle=p.col;ctx.fill();ctx.fillStyle='#fff';ctx.font='bold 8.5px Arial';ctx.fillText(p.v.toFixed(1),x,p.y);});}ctx.textBaseline='middle';var legY=ch-22;var items=nodes.length+1;var lw=items*95;var lx=(cw-lw)/2;ctx.strokeStyle='#cc0000';ctx.lineWidth=1.5;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(lx,legY);ctx.lineTo(lx+18,legY);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#666';ctx.font='10px Arial';ctx.textAlign='left';ctx.fillText('Meta ('+(tgt!==null?tgt:'')+(kpi!=='ppp'?'%':'')+')',lx+22,legY);lx+=95;nodes.forEach(function(n){ctx.fillStyle=ECOL[n];ctx.fillRect(lx,legY-5,14,10);ctx.fillStyle='#333';ctx.font='10px Arial';ctx.textAlign='left';ctx.fillText(n,lx+17,legY);lx+=95;});var tc=document.getElementById('evoTable');var h='<table><tr><th>Node</th>';EWKS.forEach(function(w,i){h+='<th'+(i===EMK?' style="background:#ff9900"':'')+'>'+w+'</th>';});h+='<th>Media</th></tr>';nodes.forEach(function(n,ni){var bg=ni%2?'#fff':'#f8f9fa';h+='<tr style="background:'+bg+'"><td style="font-weight:bold;color:'+ECOL[n]+';border-left:3px solid '+ECOL[n]+';padding:4px 6px">'+n+'</td>';var s=0,c=0;ED[n][kpi].forEach(function(v,i){var cl='#333';if(v!==null&&tgt!==null)cl=v>=tgt?'#15803d':'#dc2626';var bc=i===EMK?'background:rgba(255,153,0,0.07);':'';h+='<td style="color:'+cl+';font-size:10px;'+bc+'">'+(v!==null?v.toFixed(1):'-')+'</td>';if(v!==null){s+=v;c++;}});h+='<td style="font-weight:bold;background:#f0f0f0">'+(c?(s/c).toFixed(1):'-')+'</td></tr>';});h+='</table>';tc.innerHTML=h;}
+window.addEventListener('load',function(){evoDraw();});
+window.addEventListener('resize',function(){clearTimeout(window._er);window._er=setTimeout(evoDraw,150);});
+document.getElementById('evoKpi').addEventListener('change',evoDraw);
+document.getElementById('evoView').addEventListener('change',evoDraw);
+document.getElementById('t1').addEventListener('change',function(){if(this.checked)setTimeout(evoDraw,100);});
+})();
+</script>
+</body>
+</html>
+
